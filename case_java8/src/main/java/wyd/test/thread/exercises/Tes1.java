@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j(topic = "c.Test7")
-public class Tes7 {
+public class Tes1 {
     public static void main(String[] args) throws InterruptedException {
         Thread t1 = new Thread(() -> {
             try {
