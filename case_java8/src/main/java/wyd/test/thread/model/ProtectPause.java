@@ -1,4 +1,4 @@
-package wyd.test.thread.synchronize.waitnotify;
+package wyd.test.thread.model;
 
 import lombok.extern.slf4j.Slf4j;
 import wyd.test.util.Downloader;
