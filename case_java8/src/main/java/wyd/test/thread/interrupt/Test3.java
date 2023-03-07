@@ -18,18 +18,35 @@ public class Test3 {
     static class TwoPhaseTermination{
         private Thread monitor;
 
-        public void start(){
+        // 判断是否该结束
+        private volatile boolean stop;
+        // 判断是否已经执行过strat
+        private boolean starting = false ;
 
+        public void start(){
+            synchronized (this) {
+                // 犹豫模式
+                if (starting) {
+                    return;
+                }
+                starting = true;
+            }
             this.monitor = new Thread(() -> {
                 while (true){
                     if (Thread.currentThread().isInterrupted()) {
                         log.debug("料理后事...");
                         break;
                     }
-                    try {
+                    // 用 volatile 的 stop 变量控制结束
+                    if (stop) {
+                        log.debug("料理后事....");
+                        break;
+                    }
+                try {
                         TimeUnit.SECONDS.sleep(1);
                         log.debug("打印监控日志...");
                     } catch (InterruptedException e) {
+                    // 如果使用 stop 变量结束，此处可以不重置打断标记，也不用打印日志
                         e.printStackTrace();
                         // 重置打断标记
                         monitor.interrupt();
@@ -40,6 +57,11 @@ public class Test3 {
         }
 
         public void stop(){
+            monitor.interrupt();
+        }
+
+        public void stop2(){
+            stop = true;
             monitor.interrupt();
         }
     }
