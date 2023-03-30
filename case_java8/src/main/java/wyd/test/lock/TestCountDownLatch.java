@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 @Slf4j(topic = "c")
 public class TestCountDownLatch {
     public static void main(String[] args) throws InterruptedException {
-
+        rest();
     }
 
     private static void rest() throws InterruptedException {
