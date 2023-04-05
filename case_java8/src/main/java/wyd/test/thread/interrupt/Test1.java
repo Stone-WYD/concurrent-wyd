@@ -13,6 +13,7 @@ public class Test1 {
                 TimeUnit.SECONDS.sleep(1);
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
+                log.debug("被打断了...");
                 throw new RuntimeException(e);
             }
         },"t1");
