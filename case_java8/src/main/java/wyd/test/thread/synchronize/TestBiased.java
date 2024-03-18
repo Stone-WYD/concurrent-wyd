@@ -2,23 +2,27 @@ package wyd.test.thread.synchronize;
 
 import lombok.extern.slf4j.Slf4j;
 import org.openjdk.jol.info.ClassLayout;
+import wyd.test.util.Sleeper;
 
 import java.util.Vector;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
+/**
+ * @author: Stone
+ * @description: 注意配置jvm参数： -XX:BiasedLockingStartupDelay=0，关闭偏向锁延迟开启
+ * @date: 2024/3/18 13:36
+*/
 @Slf4j(topic = "c")
 public class TestBiased {
 
     static Thread t1, t2, t3;
 
     public static void main(String[] args) throws InterruptedException {
-        test22();
+        test2();
     }
 
     // 测试偏向锁的撤销
     public static void test1(){
-
         Dog d = new Dog();
         new Thread(()->{
             log.debug(ClassLayout.parseInstance(d).toPrintableSimple());
@@ -52,7 +56,7 @@ public class TestBiased {
     }
 
     // 测试批量重偏向
-    public static void test2() throws InterruptedException{
+    public static void test2() {
         Vector<Dog> list = new Vector<>();
         Cat cat = new Cat();
 
@@ -72,6 +76,7 @@ public class TestBiased {
             synchronized (list){
                 list.notify();
             }
+            Sleeper.sleep(5);
         },"t1");
         t1.start();
 
@@ -84,6 +89,15 @@ public class TestBiased {
                     throw new RuntimeException(e);
                 }
             }
+
+            Dog dd = new Dog();
+            list.add(dd);
+            log.debug("锁定偏向前：" + "\t" + ClassLayout.parseInstance(dd).toPrintableSimple());
+            synchronized (dd){
+                log.debug("锁定：" + "\t" + ClassLayout.parseInstance(dd).toPrintableSimple());
+            }
+            log.debug("锁定偏向后：" + "\t" + ClassLayout.parseInstance(dd).toPrintableSimple());
+
 
             for (int i = 0; i < 30; i++) {
                 Dog d = list.get(i);
@@ -104,7 +118,7 @@ public class TestBiased {
     }
 
     // 测试重偏向-2
-    public static void test22() throws InterruptedException{
+    public static void test22() {
         Vector<Dog> list = new Vector<>();
 
         t1 = new Thread(()->{
