@@ -26,10 +26,13 @@
             <version>1.2.3</version>
         </dependency>
 
+        <!-- 此处只是在 idea 中运行，如果要打包，则在 plugin 标签的 configuration 中要将 includeSystemScope 配置设置为 true -->
         <dependency>
             <groupId>org.openjdk.jol</groupId>
             <artifactId>jol-core</artifactId>
             <version>0.16-wyd</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/jol-core/0.16-wyd/jol-core-0.16-wyd.jar</systemPath>
         </dependency>
 
         <dependency>
